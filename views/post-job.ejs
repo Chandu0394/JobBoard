@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <!-- Link to the specific CSS file for post job page -->
+    <link rel="stylesheet" href="/post_job.css">
+    <script>
+        // Function to copy text to clipboard using document.execCommand
+        function copyLink() {
+            const jobLinkInput = document.getElementById('jobLink');
+            
+            // Check if the input element exists
+            if (jobLinkInput) {
+                // Select the text in the input field
+                jobLinkInput.select();
+                jobLinkInput.setSelectionRange(0, 99999); // For mobile devices
+
+                try {
+                    // Execute the copy command
+                    document.execCommand('copy');
+                    
+                    // Show a "Copied!" message
+                    const copyMessage = document.getElementById('copyMessage');
+                    if (copyMessage) {
+                        copyMessage.textContent = 'Link Copied!';
+                        copyMessage.classList.add('show');
+                        setTimeout(() => {
+                            copyMessage.classList.remove('show');
+                            copyMessage.textContent = ''; // Clear message after fading out
+                        }, 2000); // Hide after 2 seconds
+                    }
+                } catch (err) {
+                    console.error('Failed to copy text: ', err);
+                    // Optionally, provide user feedback if copy fails
+                    const copyMessage = document.getElementById('copyMessage');
+                    if (copyMessage) {
+                        copyMessage.textContent = 'Failed to copy link.';
+                        copyMessage.classList.add('show');
+                        copyMessage.style.color = '#ef4444'; // Red for error
+                        setTimeout(() => {
+                            copyMessage.classList.remove('show');
+                            copyMessage.textContent = '';
+                            copyMessage.style.color = '#48bb78'; // Reset color
+                        }, 3000);
+                    }
+                }
+            } else {
+                console.error("Job link input element not found.");
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>Post a New Job</h2>
+        <form method="post">
+            <input name="title" placeholder="Job Title" required />
+            <input name="company" placeholder="Company" required />
+            <input name="location" placeholder="Location" required />
+            <select name="type" required>
+                <option value="">Select Job Type</option> <!-- Added default empty option -->
+                <option>Full‑Time</option>
+                <option>Part‑Time</option>
+                <option>Internship</option>
+                <option>Remote</option>
+                <option>Contract</option>
+            </select>
+            <textarea name="description" placeholder="Job Description" required></textarea>
+            <input name="applyLink" placeholder="Apply Link URL" type="url" required />
+            <button type="submit">Post Job</button>
+        </form>
+
+        <% if (url) { %>
+            <div class="copy-section">
+                <p>Job posted!</p>
+                <input type="text" readonly value="<%= url %>" id="jobLink" />
+                <button type="button" onclick="copyLink()">Copy Link</button>
+                <div id="copyMessage" class="copy-message"></div>
+            </div>
+        <% } %>
+
+        <!-- New navigation links below the form/copy section -->
+        <div class="nav-links">
+            <a href="/post-job">Post New Job</a>
+            <a href="/manage-jobs">Manage Jobs</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+</body>
+</html>

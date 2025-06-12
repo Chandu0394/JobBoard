@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= job.title %> - Job Details</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+  <!-- External CSS -->
+  <link rel="stylesheet" href="/job.css" />
+</head>
+<body>
+
+  <header class="top-header">
+    <div class="top-bar">
+      <div class="brand-name">JobBoard</div>
+      <div class="social-icons">
+        <a href="https://www.linkedin.com/in/chandu-dharmapuri-0a3290207/" target="_blank" title="LinkedIn">
+          <img src="/linkedin.png" alt="LinkedIn" class="social-img" />
+        </a>
+        <a href="https://t.me/fresherhiringgrads" target="_blank" title="Telegram">
+          <img src="/telegram.png" alt="Telegram" class="social-img" />
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="job-detail">
+    <h1><%= job.title %></h1>
+    <div class="meta">
+      <strong><%= job.company %></strong> • <%= job.location %> • <%= job.type %>
+    </div>
+
+    <div class="description">
+      <h3>Job Description</h3>
+      <pre><%= job.description %></pre>
+    </div>
+  </main>
+
+  <a href="<%= job.applyLink %>" class="apply-btn" target="_blank">Apply Now</a>
+
+</body>
+</html>

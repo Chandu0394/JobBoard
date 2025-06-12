@@ -1,0 +1,229 @@
+/*
+ * admin_login.css
+ * This CSS file provides a visually stunning 3D gradient login page with animations and 3D styled buttons.
+ * It's designed for the login.ejs file to ensure individual, non-overlapping styles.
+ */
+
+/* Universal box-sizing for consistent layout */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Base styles for HTML and Body */
+html, body {
+    height: 100%;
+    font-family: 'Inter', sans-serif; /* Using Inter font for a modern look */
+    overflow: hidden; /* Prevent scrollbars due to background effects */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%); /* Dark gradient background for depth */
+}
+
+/* Keyframes for background circle animations */
+@keyframes moveCircle {
+    0% { transform: translate(0, 0) scale(1); opacity: 0.7; }
+    25% { transform: translate(20vw, -10vh) scale(1.1); opacity: 0.8; }
+    50% { transform: translate(-15vw, 20vh) scale(1.2); opacity: 0.9; }
+    75% { transform: translate(25vw, 15vh) scale(1.1); opacity: 0.8; }
+    100% { transform: translate(0, 0) scale(1); opacity: 0.7; }
+}
+
+@keyframes fadeInScale {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Styling for the animated background circles */
+.circle {
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(135, 206, 235, 0.6) 0%, rgba(30, 144, 255, 0.3) 100%); /* Sky blue gradient */
+    border-radius: 50%;
+    filter: blur(80px); /* Soft blur for a glowing effect */
+    opacity: 0.7;
+    animation: moveCircle 20s infinite alternate; /* Continuous subtle movement */
+    z-index: -1; /* Send circles to the background */
+}
+
+/* Individual positioning and animation delays for each circle */
+.circle:nth-child(1) {
+    top: 10%;
+    left: 15%;
+    animation-delay: 0s;
+}
+
+.circle:nth-child(2) {
+    bottom: 5%;
+    right: 20%;
+    animation-delay: 5s;
+    background: radial-gradient(circle, rgba(255, 165, 0, 0.6) 0%, rgba(255, 69, 0, 0.3) 100%); /* Orange gradient */
+}
+
+.circle:nth-child(3) {
+    top: 30%;
+    right: 10%;
+    animation-delay: 10s;
+    background: radial-gradient(circle, rgba(147, 112, 219, 0.6) 0%, rgba(75, 0, 130, 0.3) 100%); /* Purple gradient */
+}
+
+/* Login container styling */
+.login-container {
+    background: rgba(45, 55, 72, 0.8); /* Semi-transparent dark background */
+    border-radius: 20px; /* Rounded corners */
+    padding: 40px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), /* Stronger shadow for 3D effect */
+                0 0 10px rgba(0, 0, 0, 0.2) inset; /* Inner shadow */
+    text-align: center;
+    max-width: 400px;
+    width: 90%; /* Responsive width */
+    color: #edf2f7; /* Light text color */
+    position: relative; /* Needed for z-index */
+    z-index: 1; /* Bring container to foreground */
+    animation: fadeInScale 0.8s ease-out forwards; /* Fade in and scale animation on load */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle white border */
+    backdrop-filter: blur(10px); /* Frosted glass effect */
+    -webkit-backdrop-filter: blur(10px); /* For Safari */
+}
+
+/* Heading styling */
+.login-container h2 {
+    margin-bottom: 30px;
+    font-size: 2.2rem;
+    color: #63b3ed; /* Light blue heading */
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Subtle text shadow */
+    font-weight: bold;
+}
+
+/* Error message styling */
+.error {
+    background-color: #e53e3e; /* Red background for errors */
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Form input styling */
+.login-container input {
+    width: calc(100% - 20px); /* Full width minus padding */
+    padding: 15px;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.1); /* Light transparent input background */
+    color: #edf2f7;
+    font-size: 1rem;
+    outline: none; /* Remove default outline */
+    transition: all 0.3s ease; /* Smooth transitions for focus */
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.3); /* Inner shadow for depth */
+}
+
+.login-container input::placeholder {
+    color: rgba(237, 242, 247, 0.6); /* Lighter placeholder text */
+}
+
+.login-container input:focus {
+    background-color: rgba(255, 255, 255, 0.2); /* Slightly more opaque on focus */
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4), 0 0 15px rgba(99, 179, 237, 0.7); /* Glow effect on focus */
+    transform: translateY(-2px); /* Slight lift on focus */
+}
+
+/* 3D Styled Button */
+.login-container button {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(145deg, #4299e1, #3182ce); /* Blue gradient for 3D effect */
+    color: white;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    outline: none;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4), /* Outer shadow for depth */
+                inset 0 -4px 5px rgba(0, 0, 0, 0.2); /* Inner shadow for bottom edge */
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    position: relative; /* For the pseudo-element 'active' state */
+}
+
+.login-container button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    background: linear-gradient(rgba(255,255,255,0.1), rgba(255,255,255,0)); /* Subtle highlight */
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    opacity: 1;
+}
+
+.login-container button:hover {
+    transform: translateY(-3px); /* Lift button on hover */
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.5),
+                inset 0 -5px 6px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(145deg, #3182ce, #2c5282); /* Darker gradient on hover */
+}
+
+.login-container button:active {
+    transform: translateY(1px); /* Push button down on click */
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3),
+                inset 0 2px 5px rgba(0, 0, 0, 0.3); /* Squashed shadow */
+    background: linear-gradient(145deg, #2c5282, #3182ce); /* Inverted gradient on active */
+}
+
+.login-container button:active::before {
+    opacity: 0; /* Remove highlight on active */
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .login-container {
+        padding: 30px 20px;
+        border-radius: 15px;
+    }
+
+    .login-container h2 {
+        font-size: 1.8rem;
+        margin-bottom: 25px;
+    }
+
+    .login-container input,
+    .login-container button {
+        padding: 12px;
+        font-size: 0.95rem;
+        border-radius: 8px;
+    }
+
+    .circle {
+        width: 150px;
+        height: 150px;
+        filter: blur(50px);
+    }
+}
+
+@media (max-width: 400px) {
+    .login-container {
+        padding: 25px 15px;
+    }
+
+    .login-container h2 {
+        font-size: 1.6rem;
+        margin-bottom: 20px;
+    }
+
+    .login-container input,
+    .login-container button {
+        font-size: 0.9rem;
+    }
+}
