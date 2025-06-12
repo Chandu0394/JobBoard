@@ -4,7 +4,7 @@ const expressLayouts = require('express-ejs-layouts');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const slugify = require('slugify');
 const Job = require('./models/Job');
 
