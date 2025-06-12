@@ -38,7 +38,6 @@ app.use((req, res, next) => {
   next();
 });
 
-
 // Make auth state available in all views
 app.use((req, res, next) => {
   res.locals.authenticated = req.session.authenticated;
@@ -78,7 +77,7 @@ app.get('/logout', (req, res) => {
 
 // Post job
 app.get('/post-job', requireAuth, (req, res) => {
-  res.render('post-job', { title: 'Post Job', url: null, publicView: false });
+  res.render('post-job', { title: 'Edit Job', job, url: null, publicView: false });
 });
 
 app.post('/post-job', requireAuth, async (req, res) => {
@@ -88,7 +87,7 @@ app.post('/post-job', requireAuth, async (req, res) => {
   const job = await Job.create({ title, company, location, type, description, applyLink, slug });
   const url = `${req.protocol}://${req.get('host')}/jobs/${job.slug}`;
 
-  res.render('post-job', { title: 'Post Job', url, publicView: false });
+  res.render('post-job', { title: 'Post Job', job: null, url, publicView: false });
 });
 
 // View job (public)
@@ -100,18 +99,18 @@ app.get('/jobs/:slug', async (req, res) => {
 
 // Manage jobs (admin only)
 app.get('/manage-jobs', requireAuth, async (req, res) => {
-  const jobs = await Job.find().sort({ createdAt: -1 }); // Sort by latest
+  const jobs = await Job.find().sort({ createdAt: -1 });
   res.render('manage-jobs', { jobs, publicView: false });
 });
-
-
 
 // Edit job
 app.get('/edit-job/:id', requireAuth, async (req, res) => {
   const job = await Job.findById(req.params.id);
   if (!job) return res.status(404).send('Job not found');
   res.render('edit-job', { title: 'Edit Job', job, publicView: false });
+
 });
+
 
 app.post('/edit-job/:id', requireAuth, async (req, res) => {
   const { title, company, location, type, description, applyLink } = req.body;
