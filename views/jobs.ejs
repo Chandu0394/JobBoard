@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Job Listings</title>
+  <link rel="stylesheet" href="/jobs.css" />
+
+  <!-- Google Adsense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3145806980070160"
+    crossorigin="anonymous"></script>
+</head>
+<body>
+  <header class="top-header">
+    <div class="top-bar">
+      <div class="brand-name">JobBoard</div>
+      <div class="social-icons">
+        <a href="https://www.linkedin.com/in/chandu-dharmapuri-0a3290207/" target="_blank">
+          <img src="/linkedin.png" class="social-img" alt="LinkedIn">
+        </a>
+        <a href="https://t.me/fresherhiringgrads" target="_blank">
+          <img src="/telegram.png" class="social-img" alt="Telegram">
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="job-listings">
+    <h1>Latest Job Openings</h1>
+
+    <!-- Filters -->
+    <div class="filters">
+      <input type="text" id="search" placeholder="Search title or company..." oninput="filterJobs()" />
+      <input type="text" id="citySearch" placeholder="Filter by city..." oninput="filterJobs()" />
+      <select id="typeFilter" onchange="filterJobs()">
+        <option value="">All Types</option>
+        <% [...new Set(jobs.map(j => j.type))].forEach(type => { %>
+          <option value="<%= type %>"><%= type %></option>
+        <% }) %>
+      </select>
+    </div>
+
+    <!-- Job Cards -->
+    <div class="job-cards" id="jobCards">
+      <% jobs.forEach((job, index) => { %>
+        <div class="job-card"
+          data-index="<%= index %>"
+          data-title="<%= job.title.toLowerCase() %>"
+          data-company="<%= job.company.toLowerCase() %>"
+          data-location="<%= job.location.toLowerCase() %>"
+          data-type="<%= job.type %>">
+
+          <h2><%= job.title %></h2>
+          <p class="company"><%= job.company %> — <%= job.location %> — <%= job.type %></p>
+          <p class="summary"><%= job.description.substring(0, 120) %>...</p>
+          <p class="posted-date">
+            Posted on: 
+            <%= new Date(job.createdAt).toLocaleDateString('en-US', {
+              year: 'numeric', month: 'short', day: 'numeric'
+            }) %>
+          </p>
+          <div class="card-actions">
+            <a href="/jobs/<%= job.slug %>" class="view-btn">View</a>
+            <a href="<%= job.applyLink %>" class="apply-btn" target="_blank">Apply</a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination" id="pagination"></div>
+  </main>
+
+  <!-- Responsive Adsense Ad (optional spot) -->
+  <div style="text-align:center; margin: 20px 0;">
+    <ins class="adsbygoogle"
+      style="display:block"
+      data-ad-client="ca-pub-3145806980070160"
+      data-ad-slot="1234567890"
+      data-ad-format="auto"
+      data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+
+  <script>
+    const jobsPerPage = 20;
+    let currentPage = 1;
+
+    function filterJobs() {
+      const search = document.getElementById('search').value.toLowerCase();
+      const city = document.getElementById('citySearch').value.toLowerCase();
+      const type = document.getElementById('typeFilter').value;
+
+      const cards = document.querySelectorAll('.job-card');
+      cards.forEach(card => {
+        const title = card.dataset.title;
+        const company = card.dataset.company;
+        const location = card.dataset.location;
+        const cardType = card.dataset.type;
+
+        const matchesSearch = title.includes(search) || company.includes(search);
+        const matchesCity = location.includes(city);
+        const matchesType = !type || cardType === type;
+
+        card.style.display = (matchesSearch && matchesCity && matchesType) ? 'block' : 'none';
+      });
+
+      currentPage = 1;
+      paginate();
+    }
+
+    function paginate() {
+      const cards = [...document.querySelectorAll('.job-card')].filter(c => c.style.display !== 'none');
+      const totalPages = Math.ceil(cards.length / jobsPerPage);
+      const pagination = document.getElementById('pagination');
+      pagination.innerHTML = '';
+
+      cards.forEach((card, i) => {
+        card.style.display = (i >= (currentPage - 1) * jobsPerPage && i < currentPage * jobsPerPage) ? 'block' : 'none';
+      });
+
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = i;
+        btn.className = i === currentPage ? 'active' : '';
+        btn.onclick = () => {
+          currentPage = i;
+          paginate();
+        };
+        pagination.appendChild(btn);
+      }
+    }
+
+    window.onload = () => {
+      filterJobs();
+    };
+  </script>
+</body>
+</html>

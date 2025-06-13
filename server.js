@@ -7,7 +7,7 @@ const MongoStore = require('connect-mongo');
 const bcrypt = require('bcryptjs');
 const slugify = require('slugify');
 const Job = require('./models/Job');
-
+const sitemapRoutes = require('./routes/sitemap');
 const app = express();
 
 // MongoDB connection using MONGO_URI from .env
@@ -22,6 +22,7 @@ mongoose.connect(process.env.MONGO_URI, {
 });
 
 // Middleware
+app.use('/', sitemapRoutes);
 app.use(expressLayouts);
 app.set('layout', 'layout');
 app.set('view engine', 'ejs');
@@ -59,6 +60,11 @@ function requireAuth(req, res, next) {
 }
 
 // Routes
+app.get('/jobs', async (req, res) => {
+  const jobs = await Job.find().sort({ createdAt: -1 }).limit(20);
+  res.render('jobs', { jobs, title: 'All Jobs', publicView: true });
+});
+
 app.get('/', (req, res) => res.redirect('/login'));
 
 app.get('/login', (req, res) => {

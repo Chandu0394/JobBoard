@@ -7,8 +7,9 @@ const JobSchema = new mongoose.Schema({
   type: String,
   description: String,
   applyLink: String,
-  slug: { type: String, unique: true },
-  createdAt: { type: Date, default: Date.now }
+  slug: { type: String, unique: true }
+}, {
+  timestamps: true  // Automatically adds createdAt and updatedAt
 });
 
 module.exports = mongoose.model('Job', JobSchema);
