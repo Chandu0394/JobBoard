@@ -10,8 +10,16 @@ const Job = require('./models/Job');
 
 const app = express();
 
-// MongoDB connection
-mongoose.connect(process.env.MONGO_URI);
+// MongoDB connection using MONGO_URI from .env
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log("✅ Connected to MongoDB Atlas"))
+.catch((err) => {
+  console.error("❌ MongoDB connection error:", err.message);
+  process.exit(1);
+});
 
 // Middleware
 app.use(expressLayouts);
@@ -20,7 +28,7 @@ app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-// Session handling with 5-minute timeout
+// Session handling
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
@@ -32,13 +40,13 @@ app.use(session({
   store: MongoStore.create({ mongoUrl: process.env.MONGO_URI })
 }));
 
-// Prevent caching of admin pages
+// Prevent caching
 app.use((req, res, next) => {
   res.set('Cache-Control', 'no-store');
   next();
 });
 
-// Make auth state available in all views
+// Expose auth state
 app.use((req, res, next) => {
   res.locals.authenticated = req.session.authenticated;
   next();
@@ -77,7 +85,7 @@ app.get('/logout', (req, res) => {
 
 // Post job
 app.get('/post-job', requireAuth, (req, res) => {
-  res.render('post-job', { title: 'Edit Job', job, url: null, publicView: false });
+  res.render('post-job', { title: 'Post Job', job: null, url: null, publicView: false });
 });
 
 app.post('/post-job', requireAuth, async (req, res) => {
@@ -97,7 +105,7 @@ app.get('/jobs/:slug', async (req, res) => {
   res.render('job', { title: job.title, job, publicView: true });
 });
 
-// Manage jobs (admin only)
+// Manage jobs (admin)
 app.get('/manage-jobs', requireAuth, async (req, res) => {
   const jobs = await Job.find().sort({ createdAt: -1 });
   res.render('manage-jobs', { jobs, publicView: false });
@@ -108,9 +116,7 @@ app.get('/edit-job/:id', requireAuth, async (req, res) => {
   const job = await Job.findById(req.params.id);
   if (!job) return res.status(404).send('Job not found');
   res.render('edit-job', { title: 'Edit Job', job, publicView: false });
-
 });
-
 
 app.post('/edit-job/:id', requireAuth, async (req, res) => {
   const { title, company, location, type, description, applyLink } = req.body;
@@ -131,4 +137,4 @@ app.post('/delete-job/:id', requireAuth, async (req, res) => {
 
 // Start server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Listening on http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`🚀 Server running at http://localhost:${PORT}`));
